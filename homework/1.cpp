@@ -52,6 +52,7 @@ int main (void){
             for (int i = 0; i < N; i++)
                 sum += a[i][j];
     }
-
+    free (a[0]);
+    free (a);
     return 0;
 }
