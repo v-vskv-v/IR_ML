@@ -34,6 +34,7 @@ int main (int argc, char* argv[]) {
                 break;
             }
         }
+        
         int ans = 0;
         if (left != -1 && right != -1) {
             for (int i = left; i <= right; i++)
