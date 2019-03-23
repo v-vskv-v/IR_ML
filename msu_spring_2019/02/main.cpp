@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector <int64_t> getTokens (string s){
+vector <int64_t> getTokens (const string &s){
     vector <int64_t> ans = {};
     int64_t tmp = 0;
     int64_t len = s.size();
@@ -37,7 +37,7 @@ vector <int64_t> getTokens (string s){
     return ans;
 }
 
-bool isRight (vector <int64_t> v) {
+bool isRight (const vector <int64_t> &v) {
     int64_t len = v.size();
     bool div = 0;
     if (v.empty() || v[len - 1] < 0 || v[0] < -1)
@@ -61,7 +61,7 @@ bool isRight (vector <int64_t> v) {
     return 1;
 }
 
-vector <int64_t> solveUnaryBinaryMinus (vector <int64_t> v) {
+vector <int64_t> solveUnaryBinaryMinus (const vector <int64_t> &v) {
     vector <int64_t> ans = {};
     int64_t len = v.size();
     char sign = 1;
@@ -86,7 +86,7 @@ vector <int64_t> solveUnaryBinaryMinus (vector <int64_t> v) {
     return ans;
 }
 
-int64_t calculate (vector <int64_t> v, unsigned j) {
+int64_t calculate (const vector <int64_t> &v, unsigned j) {
     int64_t len = v.size();
     if (j + 1 < len) {
         if (v[j + 1] == -2)
