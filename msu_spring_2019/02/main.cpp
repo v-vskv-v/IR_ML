@@ -4,34 +4,34 @@
 
 using namespace std;
 
-vector <int64_t> getTokens (const string &s){
+vector <int64_t> getTokens (const string &sin){
     vector <int64_t> ans = {};
     int64_t tmp = 0;
-    int64_t len = s.size();
+    int64_t len = sin.size();
     char sign = 1;
     for (unsigned i = 0; i < len; i++, tmp = 0) {
-        if (s[i] >= '0' && s[i] <= '9') {
-            while (i < len && s[i] >= '0' && s[i] <= '9') {
+        if (sin[i] >= '0' && sin[i] <= '9') {
+            while (i < len && sin[i] >= '0' && sin[i] <= '9') {
                 tmp *= 10;
-                tmp += s[i++] - '0';
+                tmp += sin[i++] - '0';
             }
             tmp *= sign;
             sign = 1;
             i--;
             ans.push_back(tmp);
         }
-        else if (s[i] == '+' || s[i] == '-' || s[i] == '*' || s[i] == '/') {
-            if (s[i] == '-')
+        else if (sin[i] == '+' || sin[i] == '-' || sin[i] == '*' || sin[i] == '/') {
+            if (sin[i] == '-')
                 tmp = -1;
-            else if (s[i] == '+')
+            else if (sin[i] == '+')
                 tmp = -2;
-            else if (s[i] == '*')
+            else if (sin[i] == '*')
                 tmp = -3;
             else
                 tmp = -4;
             ans.push_back(tmp);
         }
-        else if (s[i] != ' ')
+        else if (sin[i] != ' ')
             return {};
     }
     return ans;
