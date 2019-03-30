@@ -8,9 +8,9 @@ public:
     unsigned cols;
     int32_t **data;
 
-    Matrix (unsigned r, unsigned c) {
-        rows = r;
-        cols = c;
+    Matrix (unsigned inrows, unsigned incols) {
+        rows = inrows;
+        cols = incols;
         data = new int32_t*[rows];
         for (unsigned i = 0; i < rows; i++)
             data[i] = new int32_t[cols];
