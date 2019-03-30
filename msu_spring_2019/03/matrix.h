@@ -3,11 +3,11 @@
 
 
 class Matrix {
-public:
+private:
     unsigned rows;
     unsigned cols;
     int32_t **data;
-
+public:
     Matrix (unsigned inrows, unsigned incols) {
         rows = inrows;
         cols = incols;
