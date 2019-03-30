@@ -11,6 +11,8 @@ public:
     Matrix (unsigned inrows, unsigned incols) {
         rows = inrows;
         cols = incols;
+        if (inrows < 0 || incols < 0)
+            throw std::out_of_range("");
         data = new int32_t*[rows];
         for (unsigned i = 0; i < rows; i++)
             data[i] = new int32_t[cols];
