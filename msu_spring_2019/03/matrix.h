@@ -3,7 +3,6 @@
 
 
 class Matrix {
-private:
     unsigned rows;
     unsigned cols;
     int32_t **data;
