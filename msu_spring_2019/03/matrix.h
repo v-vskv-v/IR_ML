@@ -1,23 +1,27 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-
 class Matrix {
     unsigned rows;
     unsigned cols;
     int32_t **data;
 public:
     Matrix (unsigned inrows, unsigned incols) {
-        rows = inrows;
-        cols = incols;
         //if (inrows < 0 || incols < 0)
         //    throw std::out_of_range("");
+        rows = inrows;
+        cols = incols;
         data = new int32_t*[rows];
         for (unsigned i = 0; i < rows; i++)
             data[i] = new int32_t[cols];
     }
 
-    ~Matrix () {}
+    ~Matrix () {
+        for (unsigned i = 0; i < rows; i++)
+            delete[] data[i];
+        delete[] data;
+        data = nullptr;
+    }
 
     unsigned getRows() const {
         return this->rows;
