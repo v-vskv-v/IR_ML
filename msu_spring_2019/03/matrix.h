@@ -39,15 +39,28 @@ public:
         Row (int32_t *row, int32_t c)
             :data (row), cols (c) {}
 
-
         int32_t& operator [] (size_t j) {
             if (j >= cols || j < 0)
                 throw std::out_of_range("");
             return this->data[j];
         }
+
+        const int32_t& operator [] (size_t j) const {
+            if (j >= cols || j < 0)
+                throw std::out_of_range("");
+            return this->data[j];
+        }
+
     };
 
-    Row operator [] (size_t i) const {
+    Row operator [] (size_t i) {
+        if (i >= this->rows || i < 0)
+            throw std::out_of_range("");
+        Row row (this->data[i], this->cols);
+        return row;
+    }
+
+    const Row operator [] (size_t i) const {
         if (i >= this->rows || i < 0)
             throw std::out_of_range("");
         Row row (this->data[i], this->cols);
@@ -72,7 +85,7 @@ public:
         return !(*this == other);
     }
 
-    const Matrix& operator *= (const size_t value) {
+    const Matrix& operator *= (const size_t value) const {
         for (unsigned i = 0; i < this->rows; i++) {
             for (unsigned j = 0; j < this->cols; j++) {
                 this->data[i][j] *= value;
@@ -80,6 +93,16 @@ public:
         }
         return *this;
     }
+
+    Matrix& operator *= (const size_t value) {
+        for (unsigned i = 0; i < this->rows; i++) {
+            for (unsigned j = 0; j < this->cols; j++) {
+                this->data[i][j] *= value;
+            }
+        }
+        return *this;
+    }
+
 };
 
 #endif // MATRIX_H_INCLUDED
