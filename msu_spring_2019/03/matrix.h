@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+
 class Matrix {
 public:
     unsigned rows;
@@ -31,8 +32,7 @@ public:
         unsigned cols;
 
         Row (int32_t *row, int32_t c)
-            :data (row)
-            ,cols (c) {}
+            :data (row), cols (c) {}
 
 
         int32_t& operator [] (size_t j) {
