@@ -7,8 +7,6 @@ class Matrix {
     int32_t **data;
 public:
     Matrix (unsigned inrows, unsigned incols) {
-        //if (inrows < 0 || incols < 0)
-        //    throw std::out_of_range("");
         rows = inrows;
         cols = incols;
         data = new int32_t*[rows];
@@ -20,7 +18,6 @@ public:
         for (unsigned i = 0; i < rows; i++)
             delete[] data[i];
         delete[] data;
-        data = nullptr;
     }
 
     unsigned getRows() const {
@@ -40,13 +37,13 @@ public:
             :data (row), cols (c) {}
 
         int32_t& operator [] (size_t j) {
-            if (j >= cols || j < 0)
+            if (j >= cols)
                 throw std::out_of_range("");
             return this->data[j];
         }
 
         const int32_t& operator [] (size_t j) const {
-            if (j >= cols || j < 0)
+            if (j >= cols)
                 throw std::out_of_range("");
             return this->data[j];
         }
@@ -54,14 +51,14 @@ public:
     };
 
     Row operator [] (size_t i) {
-        if (i >= this->rows || i < 0)
+        if (i >= this->rows)
             throw std::out_of_range("");
         Row row (this->data[i], this->cols);
         return row;
     }
 
     const Row operator [] (size_t i) const {
-        if (i >= this->rows || i < 0)
+        if (i >= this->rows)
             throw std::out_of_range("");
         Row row (this->data[i], this->cols);
         return row;
@@ -83,15 +80,6 @@ public:
 
     bool operator != (const Matrix& other) const {
         return !(*this == other);
-    }
-
-    const Matrix& operator *= (const size_t value) const {
-        for (unsigned i = 0; i < this->rows; i++) {
-            for (unsigned j = 0; j < this->cols; j++) {
-                this->data[i][j] *= value;
-            }
-        }
-        return *this;
     }
 
     Matrix& operator *= (const size_t value) {
