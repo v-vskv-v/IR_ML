@@ -83,9 +83,6 @@ private:
         string text;
         in_ >> text;
 
-        if (text.empty())
-            return Error::CorruptedArchive;
-
         element = 0;
 
         for (unsigned i = 0; i < text.length(); i++) {
