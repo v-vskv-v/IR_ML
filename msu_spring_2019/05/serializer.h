@@ -22,8 +22,8 @@ public:
     }
 
     template <class... ArgsT>
-    Error operator () (ArgsT... args) {
-        return process (args...);
+    Error operator () (ArgsT&&... args) {
+        return process (forward<ArgsT>(args)...);
     }
 
 private:
@@ -40,7 +40,7 @@ private:
 
     template <class T, class... ArgsT>
     Error process (T&& head, ArgsT&&... tail) {
-        process (head);
+        process (forward<T>(head));
         out_ << Separator;
         process (forward<ArgsT>(tail)...);
         return Error::NoError;
@@ -61,7 +61,7 @@ public:
 
     template <class... ArgsT>
     Error operator () (ArgsT&&... args) {
-        return process (args...);
+        return process (forward<ArgsT>(args)...);
     }
 
 private:
@@ -83,6 +83,9 @@ private:
         string text;
         in_ >> text;
 
+        if (text.empty())
+            return Error::CorruptedArchive;
+
         element = 0;
 
         for (unsigned i = 0; i < text.length(); i++) {
@@ -96,7 +99,7 @@ private:
 
     template <class T, class... ArgsT>
     Error process (T&& head, ArgsT&&... tail) {
-        if (process (head) == Error::CorruptedArchive)
+        if (process (forward<T>(head)) == Error::CorruptedArchive)
             return Error::CorruptedArchive;
         return process (forward<ArgsT>(tail)...);
     }
