@@ -17,43 +17,43 @@ struct fInfo {
 using fileInfo = struct fInfo;
 
 void Merge(uint64_t arr[], unsigned l, unsigned m, unsigned r) {
-	unsigned i, j, k;
-	unsigned n1 = m - l + 1;
-	unsigned n2 = r - m;
+    unsigned i, j, k;
+    unsigned n1 = m - l + 1;
+    unsigned n2 = r - m;
 
-	uint64_t L[n1], R[n2];
+    uint64_t L[n1], R[n2];
 
-	for (i = 0; i < n1; i++)
-		L[i] = arr[l + i];
-	for (j = 0; j < n2; j++)
-		R[j] = arr[m + 1+ j];
+    for (i = 0; i < n1; i++)
+	L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+	R[j] = arr[m + 1+ j];
 
-	i = 0;
-	j = 0;
-	k = l;
+    i = 0;
+    j = 0;
+    k = l;
 
-	while (i < n1 && j < n2) {
-		if (L[i] <= R[j])
-			arr[k++] = L[i++];
-		else
-			arr[k++] = R[j++];
-	}
+    while (i < n1 && j < n2) {
+	if (L[i] <= R[j])
+       	    arr[k++] = L[i++];
+	else
+	    arr[k++] = R[j++];
+    }
 
-	while (i < n1) {
-		arr[k++] = L[i++];
-	}
-	while (j < n2) {
-        	arr[k++] = R[j++];
-	}
+    while (i < n1) {
+	arr[k++] = L[i++];
+    }
+    while (j < n2) {
+	arr[k++] = R[j++];
+    }
 }
 
 void MergeSort(uint64_t arr[], unsigned l, unsigned r) {
-	if (l < r) {
-		unsigned m = l + (r - l) / 2;
-		MergeSort(arr, l, m);
-		MergeSort(arr, m + 1, r);
-		Merge(arr, l, m, r);
-	}
+    if (l < r) {
+	unsigned m = l + (r - l) / 2;
+	MergeSort(arr, l, m);
+	MergeSort(arr, m + 1, r);
+	Merge(arr, l, m, r);
+    }
 }
 
 unsigned lenFile(void) {
