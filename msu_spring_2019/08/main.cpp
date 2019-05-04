@@ -43,7 +43,7 @@ void Merge(uint64_t arr[], unsigned l, unsigned m, unsigned r) {
 		arr[k++] = L[i++];
 	}
 	while (j < n2) {
-        arr[k++] = R[j++];
+        	arr[k++] = R[j++];
 	}
 }
 
@@ -51,7 +51,7 @@ void MergeSort(uint64_t arr[], unsigned l, unsigned r) {
 	if (l < r) {
 		unsigned m = l + (r - l) / 2;
 		MergeSort(arr, l, m);
-		MergeSort(arr, m+1, r);
+		MergeSort(arr, m + 1, r);
 		Merge(arr, l, m, r);
 	}
 }
@@ -87,8 +87,6 @@ fileInfo* placeFiles(unsigned quant) {
     return files;
 }
 
-
-
 fileInfo& mergeFiles(fileInfo& left, fileInfo& right, unsigned side) {
     std::string name = "tmp" + std::to_string(side) + ".txt";
     std::fstream box(name, std::ios_base::out);
@@ -103,26 +101,26 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, unsigned side) {
     unsigned rightLen = right.len;
     unsigned allLen = leftLen + rightLen;
 
-	while (leftLen && rightLen) {
-        if (lFlag) {
-            left.file >> lBox;
-            lFlag = false;
-        }
-        if (rFlag) {
-            right.file >> rBox;
-            rFlag = false;
-        }
-		if (lBox <= rBox) {
-			box << lBox << ' ';
-			lFlag = true;
-			leftLen--;
-		}
-		else {
-			box << rBox << ' ';
-			rFlag = true;
-			rightLen--;
-		}
+    while (leftLen && rightLen) {
+	if (lFlag) {
+	    left.file >> lBox;
+	    lFlag = false;
 	}
+	if (rFlag) {
+	    right.file >> rBox;
+	    rFlag = false;
+	}
+	if (lBox <= rBox) {
+	    box << lBox << ' ';
+	    lFlag = true;
+	    leftLen--;
+	}
+	else {
+	    box << rBox << ' ';
+	    rFlag = true;
+	    rightLen--;
+	}
+    }
 
     if (!lFlag && leftLen) {
         box << lBox << ' ';
@@ -133,7 +131,7 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, unsigned side) {
         rightLen--;
     }
 
-	while (leftLen) {
+    while (leftLen) {
         left.file >> lBox;
 		box << lBox << ' ';
 		leftLen--;
@@ -154,7 +152,7 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, unsigned side) {
         box >> lBox;
         left.file << lBox << ' ';
         allLen--;
-	}
+    }
     box.close();
     left.file.close();
     left.len += right.len;
@@ -163,12 +161,12 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, unsigned side) {
 
 fileInfo& concatenateFiles(fileInfo* files, unsigned l, unsigned r, const unsigned side) {
     if (l < r) {
-		unsigned m = l + (r - l) / 2;
-		fileInfo& left = concatenateFiles(files, l, m, side);
-		fileInfo& right = concatenateFiles(files, m + 1, r, side);
-		return mergeFiles(left, right, side);
+	unsigned m = l + (r - l) / 2;
+	fileInfo& left = concatenateFiles(files, l, m, side);
+	fileInfo& right = concatenateFiles(files, m + 1, r, side);
+	return mergeFiles(left, right, side);
 	}
-	return files[l];
+    return files[l];
 }
 
 void removeAll(fileInfo* files, unsigned quant) {
