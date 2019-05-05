@@ -5,7 +5,7 @@
 #include <future>
 
 enum {
-    MAX_SIZE = 50000,
+    MAX_SIZE = 500000,
     OLOLO = 50000000
 };
 
@@ -72,7 +72,7 @@ uint64_t lenFile(void) {
 fileInfo* placeFiles(uint64_t quant) {
     std::fstream fin("input.txt", std::ios_base::in);
     fileInfo* files = new fileInfo[quant];
-    uint64_t box[MAX_SIZE];
+    uint64_t* box = new uint64_t[MAX_SIZE];
     for (uint64_t i = 0; i < quant; i++) {
         while (!fin.eof() && files[i].len < MAX_SIZE) {
             fin >> box[files[i].len];
@@ -85,6 +85,7 @@ fileInfo* placeFiles(uint64_t quant) {
             files[i].file << box[j] << ' ';
         files[i].file.close();
     }
+    delete(box);
     return files;
 }
 
