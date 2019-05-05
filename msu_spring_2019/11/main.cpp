@@ -70,9 +70,7 @@ uint64_t lenFile(void) {
 }
 
 fileInfo* placeFiles(uint64_t quant) {
-    std::cout << "START\n";
     std::fstream fin("input.txt", std::ios_base::in);
-    std::cout << "WOW\n";
     fileInfo* files = new fileInfo[quant];
     uint64_t box[MAX_SIZE];
     for (uint64_t i = 0; i < quant; i++) {
