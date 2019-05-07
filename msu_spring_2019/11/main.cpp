@@ -2,98 +2,102 @@
 #include <thread>
 #include <string>
 #include <fstream>
-#include <future>
+#include <vector>
 
 enum {
-    MAX_SIZE = 500000,
-    OLOLO = 50000000
+    MAX_SIZE = 50000,
+    AMOUNT = 1000000
 };
 
-struct fInfo {
-    std::fstream file;
+struct fileInfo {
+    std::ifstream reading;
+    std::ofstream writing;
     std::string name;
     uint64_t len = 0;
 };
 
-using fileInfo = struct fInfo;
+using fileInfo = struct fileInfo;
 
-void Merge(uint64_t arr[], uint64_t l, uint64_t m, uint64_t r) {
+void Merge(std::vector<uint64_t>& arr, uint64_t l, uint64_t m, uint64_t r) {
     uint64_t i, j, k;
     uint64_t n1 = m - l + 1;
     uint64_t n2 = r - m;
 
-    uint64_t L[n1], R[n2];
+    std::vector<uint64_t> L(n1);
+    std::vector<uint64_t> R(n2);
 
-    for (i = 0; i < n1; i++)
-	L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-	R[j] = arr[m + 1+ j];
+    for (i = 0; i < n1; i++) {
+	    L[i] = arr[l + i];
+    }
+    for (j = 0; j < n2; j++) {
+	    R[j] = arr[m + 1 + j];
+    }
 
     i = 0;
     j = 0;
     k = l;
 
     while (i < n1 && j < n2) {
-	if (L[i] <= R[j])
+	    if (L[i] <= R[j]) {
        	    arr[k++] = L[i++];
-	else
-	    arr[k++] = R[j++];
+	    }
+	    else {
+	        arr[k++] = R[j++];
+	    }
     }
 
     while (i < n1) {
-	arr[k++] = L[i++];
+	    arr[k++] = L[i++];
     }
     while (j < n2) {
-	arr[k++] = R[j++];
+	    arr[k++] = R[j++];
     }
 }
 
-void MergeSort(uint64_t arr[], uint64_t l, uint64_t r) {
+void MergeSort(std::vector<uint64_t>& arr, uint64_t l, uint64_t r) {
     if (l < r) {
-	uint64_t m = l + (r - l) / 2;
-	MergeSort(arr, l, m);
-	MergeSort(arr, m + 1, r);
-	Merge(arr, l, m, r);
+        uint64_t m = l + (r - l) / 2;
+        MergeSort(arr, l, m);
+        MergeSort(arr, m + 1, r);
+        Merge(arr, l, m, r);
     }
 }
 
-uint64_t lenFile(void) {
-    std::fstream box("input.txt", std::ios_base::in);
+uint64_t amountNumbers(void) {
+    std::ifstream box("input.bin", std::ios_base::binary);
     uint64_t tmp;
     uint64_t len = 0;
     while (!box.eof()) {
         box >> tmp;
         len++;
     }
-    box.close();
     return len;
 }
 
-fileInfo* placeFiles(uint64_t quant) {
-    std::fstream fin("input.txt", std::ios_base::in);
-    fileInfo* files = new fileInfo[quant];
-    uint64_t* box = new uint64_t[MAX_SIZE];
+std::vector<fileInfo> placeFiles(uint64_t quant) {
+    std::ifstream fin("input.bin", std::ios_base::binary);;
+    std::vector<fileInfo> files(quant);
+    std::vector<uint64_t> box(MAX_SIZE);
     for (uint64_t i = 0; i < quant; i++) {
         while (!fin.eof() && files[i].len < MAX_SIZE) {
             fin >> box[files[i].len];
             files[i].len++;
         }
         MergeSort(box, 0, files[i].len - 1);
-        files[i].name = std::to_string(i) + ".txt";
-        files[i].file.open(files[i].name, std::ios_base::out);
+        files[i].name = std::to_string(i) + ".bin";
+        files[i].writing.open(files[i].name, std::ios_base::binary);
         for (uint64_t j = 0; j < files[i].len; j++)
-            files[i].file << box[j] << ' ';
-        files[i].file.close();
+            files[i].writing << box[j] << '\n';
+        files[i].writing.close();
     }
-    delete(box);
     return files;
 }
 
 fileInfo& mergeFiles(fileInfo& left, fileInfo& right, uint64_t side) {
-    std::string name = "tmp" + std::to_string(side) + ".txt";
-    std::fstream box(name, std::ios_base::out);
-    left.file.open(left.name, std::ios_base::in);
-    right.file.open(right.name, std::ios_base::in);
+    std::string name = "tmp" + std::to_string(side) + ".bin";
+    std::ofstream writeBox(name, std::ios_base::binary);
+    left.reading.open(left.name, std::ios_base::binary);
+    right.reading.open(right.name, std::ios_base::binary);
 
     uint64_t lBox;
     bool lFlag = true;
@@ -105,63 +109,64 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, uint64_t side) {
 
     while (leftLen && rightLen) {
 	if (lFlag) {
-	    left.file >> lBox;
+	    left.reading >> lBox;
 	    lFlag = false;
 	}
 	if (rFlag) {
-	    right.file >> rBox;
+	    right.reading >> rBox;
 	    rFlag = false;
 	}
 	if (lBox <= rBox) {
-	    box << lBox << ' ';
+	    writeBox << lBox << '\n';
 	    lFlag = true;
 	    leftLen--;
 	}
 	else {
-	    box << rBox << ' ';
+	    writeBox << rBox << '\n';
 	    rFlag = true;
 	    rightLen--;
 	}
     }
 
     if (!lFlag && leftLen) {
-        box << lBox << ' ';
+        writeBox << lBox << '\n';
         leftLen--;
     }
     if (!rFlag && rightLen) {
-        box << rBox << ' ';
+        writeBox << rBox << '\n';
         rightLen--;
     }
 
     while (leftLen) {
-        left.file >> lBox;
-		box << lBox << ' ';
+        left.reading >> lBox;
+		writeBox << lBox << '\n';
 		leftLen--;
 	}
 	while (rightLen) {
-        right.file >> rBox;
-        box << rBox << ' ';
+        right.reading >> rBox;
+        writeBox << rBox << '\n';
         rightLen--;
 	}
 
-	left.file.close();
-	right.file.close();
-	box.close();
+	left.reading.close();
+	right.reading.close();
+	writeBox.close();
 
-	box.open(name, std::ios_base::in);
-	left.file.open(left.name, std::ios_base::out);
+	std::ifstream readBox(name, std::ios_base::binary);
+	left.writing.open(left.name, std::ios_base::binary);
 	while (allLen) {
-        box >> lBox;
-        left.file << lBox << ' ';
+        readBox >> lBox;
+        left.writing << lBox << '\n';
         allLen--;
     }
-    box.close();
-    left.file.close();
+    readBox.close();
+    left.writing.close();
     left.len += right.len;
+    remove(name.c_str());
     return left;
 }
 
-fileInfo& concatenateFiles(fileInfo* files, uint64_t l, uint64_t r, const uint64_t side) {
+fileInfo& concatenateFiles(std::vector<fileInfo>& files, uint64_t l, uint64_t r, const uint64_t side) {
     if (l < r) {
 	uint64_t m = l + (r - l) / 2;
 	fileInfo& left = concatenateFiles(files, l, m, side);
@@ -171,22 +176,18 @@ fileInfo& concatenateFiles(fileInfo* files, uint64_t l, uint64_t r, const uint64
     return files[l];
 }
 
-void removeAll(fileInfo* files, uint64_t quant) {
+void removeAll(std::vector<fileInfo>& files, uint64_t quant) {
     for (uint64_t i = 1; i < quant; i++) {
         remove(files[i].name.c_str());
     }
-    remove("tmp0.txt");
-    remove("tmp1.txt");
-    remove("tmp2.txt");
-    delete(files);
 }
 
 void createHuge(void) {
-    std::ofstream file("input.txt");
-    for (uint64_t i = OLOLO; i > 0; i--) {
+    std::ofstream file("input.bin", std::ios_base::binary);
+    for (uint64_t i = AMOUNT; i > 0; i--) {
         file << i;
         if (i != 1)
-            file << ' ';
+            file << '\n';
         if (i % 100000 == 0)
             std::cout << i << '\n';
     }
@@ -195,15 +196,15 @@ void createHuge(void) {
 
 int main(void) {
     //createHuge();
-    uint64_t len = lenFile();
+    uint64_t len = amountNumbers();
     uint64_t quant = len / MAX_SIZE;
     if (len % MAX_SIZE)
         quant++;
-    fileInfo* files = placeFiles(quant);
+    std::vector<fileInfo> files = placeFiles(quant);
     if (quant > 1) {
         uint64_t m = quant / 2 - 1;
-        std::thread left(concatenateFiles, files, 0, m, 1);
-        std::thread right(concatenateFiles, files, m + 1, quant - 1, 2);
+        std::thread left(concatenateFiles, std::ref(files), 0, m, 1);
+        std::thread right(concatenateFiles, std::ref(files), m + 1, quant - 1, 2);
         left.join();
         right.join();
         mergeFiles(files[0], files[m + 1], 0);
