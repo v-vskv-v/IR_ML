@@ -139,22 +139,22 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, uint64_t side) {
 
     while (leftLen) {
         left.reading >> lBox;
-		writeBox << lBox << '\n';
-		leftLen--;
-	}
-	while (rightLen) {
+	writeBox << lBox << '\n';
+        leftLen--;
+    }
+    while (rightLen) {
         right.reading >> rBox;
         writeBox << rBox << '\n';
         rightLen--;
-	}
+    }
 
-	left.reading.close();
-	right.reading.close();
-	writeBox.close();
+    left.reading.close();
+    right.reading.close();
+    writeBox.close();
 
-	std::ifstream readBox(name, std::ios_base::binary);
-	left.writing.open(left.name, std::ios_base::binary);
-	while (allLen) {
+    std::ifstream readBox(name, std::ios_base::binary);
+    left.writing.open(left.name, std::ios_base::binary);
+    while (allLen) {
         readBox >> lBox;
         left.writing << lBox << '\n';
         allLen--;
