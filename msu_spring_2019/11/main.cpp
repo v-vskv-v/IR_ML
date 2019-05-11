@@ -16,8 +16,6 @@ struct fileInfo {
     uint64_t len = 0;
 };
 
-using fileInfo = struct fileInfo;
-
 void Merge(std::vector<uint64_t>& arr, uint64_t l, uint64_t m, uint64_t r) {
     uint64_t i, j, k;
     uint64_t n1 = m - l + 1;
@@ -166,7 +164,7 @@ fileInfo& mergeFiles(fileInfo& left, fileInfo& right, uint64_t side) {
     return left;
 }
 
-fileInfo& concatenateFiles(std::vector<fileInfo>& files, uint64_t l, uint64_t r, const uint64_t side) {
+fileInfo& concatenateFiles(const std::vector<fileInfo>& files, uint64_t l, uint64_t r, const uint64_t side) {
     if (l < r) {
 	uint64_t m = l + (r - l) / 2;
 	fileInfo& left = concatenateFiles(files, l, m, side);
