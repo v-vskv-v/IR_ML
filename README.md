@@ -1,1 +1,1 @@
-# A collection of noteworthy code that I wrote studying on an interesting project.
+## A collection of noteworthy code wrote studying on an interesting project.
